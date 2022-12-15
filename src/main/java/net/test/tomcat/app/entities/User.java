@@ -2,29 +2,32 @@ package net.test.tomcat.app.entities;
 
 import javax.persistence.*;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.LazyCollection;
+import com.google.gson.annotations.Expose;
 
 @Entity
-@Table(name="user")
-@JsonPropertyOrder({"id", "name"})
+@Table(name = "user")
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @Expose
     private Integer id;
-    @Column(name="name")
+
+    @Column(name = "name")
+    @Expose
     private String name;
 
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Event> events;
 
     public User() {
 
     }
 
-    public User(String name){
+    public User(String name) {
         this.name = name;
     }
 
@@ -43,14 +46,6 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-
-//    public List<Event> getEvents() {
-//        return events;
-//    }
-//
-//    public void setEvents(List<Event> events) {
-//        this.events = events;
-//    }
 
 
     public List<Event> getEvents() {

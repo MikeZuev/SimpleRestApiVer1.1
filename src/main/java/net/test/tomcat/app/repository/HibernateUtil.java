@@ -19,7 +19,7 @@ public class HibernateUtil {
     }
 
 
-    public static synchronized SessionFactory getSessionFactory() {
+    private static synchronized SessionFactory getSessionFactory() {
         try {
             properties.load(ClassLoader.getSystemClassLoader().getResourceAsStream("hibernate.properties"));
 

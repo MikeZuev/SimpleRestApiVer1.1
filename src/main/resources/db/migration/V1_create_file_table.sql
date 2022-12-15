@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS files
+(
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(1000) NOT NULL,
+    path TEXT
+);

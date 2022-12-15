@@ -10,12 +10,12 @@ import org.hibernate.SessionFactory;
 import java.util.List;
 
 public class EventHibernate implements EventRepository {
-    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
 
     @Override
     public Event getById(Integer id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("select e from Event e where e.id=:id", Event.class)
+        try (Session session = HibernateUtil.getSession()) {
+            return session.createQuery("select e from Event e  left join fetch e.files where e.id=:id", Event.class)
                     .setParameter("id", id).uniqueResult();
 
         }
@@ -23,14 +23,14 @@ public class EventHibernate implements EventRepository {
 
     @Override
     public List<Event> getAll() {
-        try(Session session = sessionFactory.openSession()){
-            return session.createQuery("Select distinct e from Event e ").list();
+        try(Session session = HibernateUtil.getSession()){
+            return session.createQuery("Select distinct e from Event e left join fetch e.files").list();
         }
     }
 
     @Override
     public Event save(Event event) {
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         session.save(event);
         session.getTransaction().commit();
@@ -40,7 +40,7 @@ public class EventHibernate implements EventRepository {
 
     @Override
     public Event update(Event event) {
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         session.update(event);
         session.getTransaction().commit();
@@ -50,7 +50,7 @@ public class EventHibernate implements EventRepository {
 
     @Override
     public void delete(Integer id) {
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         Event event = session.get(Event.class, id);
         session.delete(event);

@@ -25,7 +25,7 @@ public class File {
     private Event event;
 
 
-//    private String fileUrl;
+
 
     public File(){
 
@@ -61,13 +61,7 @@ public class File {
         this.filePath = filePath;
     }
 
-//    public String getFileUrl() {
-//        return fileUrl;
-//    }
 
-//    public void setFileUrl(String fileUrl) {
-//        this.fileUrl = fileUrl;
-//    }
 
 
 

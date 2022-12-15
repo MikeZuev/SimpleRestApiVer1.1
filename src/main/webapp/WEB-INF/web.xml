@@ -7,72 +7,30 @@
   <display-name>Archetype Created Web Application</display-name>
   
   <servlet>
-    <servlet-name>NewServlet</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.NewServlet</servlet-class>
+    <servlet-name>UserRestControllerV1 </servlet-name>
+    <servlet-class>net.test.tomcat.app.controller.UserRestControllerV1</servlet-class>
   </servlet>
-  
   <servlet>
-    <servlet-name>ServletTwo</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.ServletTwo</servlet-class>
+    <servlet-name>FileRestContollerV1</servlet-name>
+    <servlet-class>net.test.tomcat.app.controller.FileRestControllerV1</servlet-class>
   </servlet>
-  
   <servlet>
-    <servlet-name>ServletUserList</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.user.ServletUserList</servlet-class>
+    <servlet-name>EventRestControllerV1</servlet-name>
+    <servlet-class>net.test.tomcat.app.controller.EventRestControllerV1</servlet-class>
   </servlet>
-  
-  <servlet>
-    <servlet-name>UsersServlet</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.user.UsersServlet</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>UserAddServlet</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.user.UserAddServlet</servlet-class>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>ServletForAll</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.user.ServletForAll</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>FileServlet</servlet-name>
-    <servlet-class>net.test.tomcat.app.servlets.file.FileServlet</servlet-class>
-  </servlet>
-  
+<!--  Fix servlet names and paths ***RestControllerV1 -->
   <servlet-mapping>
-    <servlet-name>NewServlet</servlet-name>
-    <url-pattern>/test</url-pattern>
+    <servlet-name>UserRestControllerV1 </servlet-name>
+    <url-pattern>/api/v1/users/*</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
-    <servlet-name>ServletTwo</servlet-name>
-    <url-pattern>/ServletTwo</url-pattern>
+    <servlet-name>FileRestContollerV1</servlet-name>
+    <url-pattern>/api/v1/files/*</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
-    <servlet-name>ServletUserList</servlet-name>
-    <url-pattern>/ServletUserList</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>UsersServlet</servlet-name>
-    <url-pattern>/get-all</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>UserAddServlet</servlet-name>
-    <url-pattern>/add-user</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>ServletForAll</servlet-name>
-    <url-pattern>/user/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>FileServlet</servlet-name>
-    <url-pattern>/file/*</url-pattern>
+    <servlet-name>EventRestControllerV1</servlet-name>
+    <url-pattern>/api/v1/events/*</url-pattern>
   </servlet-mapping>
 </web-app>

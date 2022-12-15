@@ -1,5 +1,5 @@
-create table if not exists user(
-    `id` int not null auto_increment,
-    `name` varchar(255) not null,
-    primary key(`id`)
-    );
+CREATE TABLE IF NOT EXISTS users
+(
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);

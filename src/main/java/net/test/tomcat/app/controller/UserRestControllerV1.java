@@ -1,10 +1,10 @@
-package net.test.tomcat.app.servlets.user;
+package net.test.tomcat.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.test.tomcat.app.dto.UserDTO;
 import net.test.tomcat.app.entities.User;
-import net.test.tomcat.app.repository.UserRepository;
 import net.test.tomcat.app.repository.hibernateimpl.UserHibernate;
 import net.test.tomcat.app.services.Impl.UserServiceImpl;
 import net.test.tomcat.app.services.UserService;
@@ -14,101 +14,99 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
+public class UserRestControllerV1 extends HttpServlet {
 
 
-public class ServletForAll extends HttpServlet {
+    private final UserService userService = new UserServiceImpl(new UserHibernate());
+    private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-
-    private UserService userService;
-
-    public ServletForAll(){
-        userService = new UserServiceImpl(new UserHibernate());
-
-    }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = request.getRequestURI();
-        System.out.println(url);
 
         String[] subStr;
         String delimeter = "/";
         subStr = url.split(delimeter);
-
-
-        for(int i = 0; i < subStr.length; i++) {
-            if(subStr[i].equals("all")){
-                List usersList = userService.getAll();
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-                String json = gson.toJson(usersList);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                PrintWriter writer = response.getWriter();
-
-                writer.println(json);
-            }
-            if(subStr[i].contains("id")){
-
-                String delim = "=";
-                String[] strs;
-                strs = subStr[i].split(delim);
-                Integer id = Integer.parseInt(strs[strs.length - 1]);
-
-
-                User user = userService.getById(id);
-                String json = new Gson().toJson(user);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                PrintWriter writer = response.getWriter();
-
-                writer.println(json);
-
-            }
-            if(subStr[i].equals("one")){
-                User user = userService.getById(1);
-                String json = new Gson().toJson(user);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                PrintWriter writer = response.getWriter();
-
-                writer.println(json);
-            }
-
+        for(String i: subStr){
+            System.out.println(i);
         }
-    }
+        System.out.println(subStr.length);
+
+
+        //api/v1/users
+        //api/v1/users/1
+        //TODO: fix the path and checks
+        if (subStr.length >= 5) {
+            Integer id = Integer.parseInt(subStr[4]);
+
+            System.out.println(id);
+
+            User user = userService.getById(id);
+            UserDTO userDTO = new UserDTO(user);
+            String json = new Gson().toJson(userDTO);
+            PrintWriter writer = response.getWriter();
+
+            writer.println(json);
+
+        } else {
+
+                List<User> usersList = userService.getAll();
+                List<UserDTO> usersDTOList = usersList.stream().map(user -> {
+                    UserDTO userDTO = new UserDTO(user);
+                    return userDTO;
+                }).collect(Collectors.toList());
+
+
+                String json = GSON.toJson(usersDTOList);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter writer = response.getWriter();
+
+                writer.println(json);
+
+            }
+        }
+
+
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userBody = getBody(request);
 
-        System.out.println("Try to write some data: ===================");
-        System.out.println(userBody);
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        User user = objectMapper.readValue(userBody, User.class);
+        User user = GSON.fromJson(userBody, User.class);
         userService.save(user);
+        //TODO: return created object
+        String userJson = GSON.toJson(user);
+        PrintWriter printWriter = response.getWriter();
+        printWriter.println(userJson);
+
+
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userBody = getBody(req);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        User user = objectMapper.readValue(userBody, User.class);
+
+        User user = GSON.fromJson(userBody, User.class);
         userService.update(user);
+        //TODO: return updated object
+        String userJson = GSON.toJson(user);
+        PrintWriter printWriter = resp.getWriter();
+        printWriter.println(userJson);
+
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userBody = getBody(req);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        User user = objectMapper.readValue(userBody, User.class);
+        //TODO: remove ObjectMapper as we work with Gson
+        User user = GSON.fromJson(userBody, User.class);
         int id = user.getId();
-        System.out.println(id);
         userService.delete(id);
     }
 

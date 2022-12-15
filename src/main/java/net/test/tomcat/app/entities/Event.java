@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="file")
-@JsonPropertyOrder({"id", "fileId", "userId"})
+@Table(name = "files")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +18,21 @@ public class Event {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<File> files;
 
+    public Event(){
 
-    @Column(name="file_id")
+    }
+
+    public Event(Integer fileId, Integer userId){
+        this.fileId = fileId;
+        this.userId = userId;
+
+    }
+
+
+    @Column(name = "file_id")
     private Integer fileId;
 
     @Column(name = "user_id")

@@ -9,11 +9,11 @@ import org.hibernate.SessionFactory;
 import java.util.List;
 
 public class FileHibernate implements FileRepository {
-    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
 
     @Override
     public File getById(Integer id) {
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = HibernateUtil.getSession()) {
             return session.createQuery("select f from File f where f.id=:id", File.class)
                     .setParameter("id", id).uniqueResult();
 
@@ -22,14 +22,14 @@ public class FileHibernate implements FileRepository {
 
     @Override
     public List<File> getAll() {
-        try(Session session = sessionFactory.openSession()){
+        try(Session session = HibernateUtil.getSession()){
             return session.createQuery("Select distinct f from File f ").list();
         }
     }
 
     @Override
     public File save(File file) {
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         session.save(file);
         session.getTransaction().commit();
@@ -39,7 +39,7 @@ public class FileHibernate implements FileRepository {
 
     @Override
     public File update(File file) {
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         session.update(file);
         session.getTransaction().commit();
@@ -49,7 +49,7 @@ public class FileHibernate implements FileRepository {
 
     @Override
     public void delete(Integer id) {
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         File file = session.get(File.class, id);
         session.delete(file);
